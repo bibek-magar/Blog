@@ -1,17 +1,25 @@
-import React, {useContext} from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Button,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
+import React, {useContext, useEffect} from 'react';
+import {Text, View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+
 import {Context} from '../context/BlogContext';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const IndexScreen = ({navigation}) => {
-  const {state, deleteBlogPost} = useContext(Context);
+  const {state, deleteBlogPost, getBlogPosts} = useContext(Context);
+
+  useEffect(() => {
+    getBlogPosts();
+
+    const listener = navigation.addListener('didFocus', () => {
+      getBlogPosts();
+    });
+
+    return () => {
+      listener.remove();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <View>
       <FlatList
